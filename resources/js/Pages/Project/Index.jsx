@@ -6,6 +6,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
 
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/16/solid';
+import TableHeading from '@/Components/TableHeading';
 
 export default function Index({ auth , projects, queryParms = null }) {
 
@@ -93,52 +94,49 @@ export default function Index({ auth , projects, queryParms = null }) {
                                             <th className="px-6 py-3 text-xs font-medium uppercase tracking-wider text-gray-500"></th>
                                         </tr>
                                         <tr className="divide-x divide-gray-200">
-                                            <th onClick={e => sortChanged('id')}>
-                                                <div className="px-3 py-3 text-xs font-medium uppercase tracking-wider text-gray-500 flex items-center justify-between gap-1 cursor-pointer">
-                                                    ID
-                                                    <div>
-                                                        <ChevronUpIcon className="w-4" />
-                                                        <ChevronDownIcon className="w-4 -mt-1" />
-                                                    </div>
-                                                </div>
-                                            </th>
-                                            <th className="px-3 py-3 text-xs font-medium uppercase tracking-wider text-gray-500">Image</th>
-                                            <th onClick={e => sortChanged('name')}>
-                                                <div className="px-3 py-3 text-xs font-medium uppercase tracking-wider text-gray-500 flex items-center justify-between gap-1 cursor-pointer">
-                                                    Name
-                                                    <div>
-                                                        <ChevronUpIcon className="w-4" />
-                                                        <ChevronDownIcon className="w-4 -mt-1" />
-                                                    </div>
-                                                </div>
-                                            </th>
-                                            <th onClick={e => sortChanged('status')}>
-                                                <div className="px-3 py-3 text-xs font-medium uppercase tracking-wider text-gray-500 flex items-center justify-between gap-1 cursor-pointer">
-                                                    Status
-                                                    <div>
-                                                        <ChevronUpIcon className="w-4" />
-                                                        <ChevronDownIcon className="w-4 -mt-1" />
-                                                    </div>
-                                                </div>
-                                            </th>
-                                            <th onClick={e => sortChanged('created_at')} className="px-3 py-3 text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                <div className="px-3 py-3 text-xs font-medium uppercase tracking-wider text-gray-500 flex items-center justify-between gap-1 cursor-pointer">
-                                                    Created Date
-                                                    <div>
-                                                        <ChevronUpIcon className="w-4" />
-                                                        <ChevronDownIcon className="w-4 -mt-1" />
-                                                    </div>
-                                                </div>
-                                            </th>
-                                            <th onClick={e => sortChanged('due_date')} className="px-3 py-3 text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                <div className="px-3 py-3 text-xs font-medium uppercase tracking-wider text-gray-500 flex items-center justify-between gap-1 cursor-pointer">
-                                                    Due Date
-                                                    <div>
-                                                        <ChevronUpIcon className="w-4" />
-                                                        <ChevronDownIcon className="w-4 -mt-1" />
-                                                    </div>
-                                                </div>
-                                            </th>
+                                            <TableHeading
+                                                name="id"
+                                                sort_field={queryParms.sort_field}
+                                                sort_direction={queryParms.sort_direction}
+                                                sortChanged={sortChanged}
+                                            >
+                                                ID
+                                            </TableHeading>
+                                            <TableHeading sortable = {false}>
+                                                Image
+                                            </TableHeading>
+                                            <TableHeading
+                                                name="name"
+                                                sort_field={queryParms.sort_field}
+                                                sort_direction={queryParms.sort_direction}
+                                                sortChanged={sortChanged}
+                                            >
+                                                Name
+                                            </TableHeading>
+                                            <TableHeading
+                                                name="status"
+                                                sort_field={queryParms.sort_field}
+                                                sort_direction={queryParms.sort_direction}
+                                                sortChanged={sortChanged}
+                                            >
+                                                Status
+                                            </TableHeading>
+                                            <TableHeading
+                                                name="created_at"
+                                                sort_field={queryParms.sort_field}
+                                                sort_direction={queryParms.sort_direction}
+                                                sortChanged={sortChanged}
+                                            >
+                                                Created Date
+                                            </TableHeading>
+                                            <TableHeading
+                                                name="due_date"
+                                                sort_field={queryParms.sort_field}
+                                                sort_direction={queryParms.sort_direction}
+                                                sortChanged={sortChanged}
+                                            >
+                                                Due Date
+                                            </TableHeading>
                                             <th className="px-3 py-3 text-xs font-medium uppercase tracking-wider text-gray-500">Created By</th>
                                             <th className="px-3 py-3 text-xs font-medium uppercase tracking-wider text-gray-500">Action</th>
                                         </tr>
