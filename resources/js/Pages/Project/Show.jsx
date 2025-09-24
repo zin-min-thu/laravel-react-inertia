@@ -70,6 +70,7 @@ export default function Show({ auth, project, tasks, queryParms = null  }) {
                             <TasksTable
                                 tasks={tasks}
                                 queryParms={queryParms}
+                                projectId={project.id}
                             />
                         </div>
                     </div>
