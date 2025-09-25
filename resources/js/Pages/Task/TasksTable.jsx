@@ -56,6 +56,7 @@ export default function TasksTable({tasks, queryParms, projectId = null}) {
                         <tr className="divide-x divide-gray-200">
                             <th className="px-6 py-3 text-xs font-medium uppercase tracking-wider text-gray-500"></th>
                             <th className="px-6 py-3 text-xs font-medium uppercase tracking-wider text-gray-500"></th>
+                            {!projectId && (<th className="px-6 py-3 text-xs font-medium uppercase tracking-wider text-gray-500"></th>)}
                             <th className="px-6 py-3 text-xs font-medium uppercase tracking-wider text-gray-500">
                                 <TextInput
                                     defaultValue={queryParms.name}
@@ -94,6 +95,11 @@ export default function TasksTable({tasks, queryParms, projectId = null}) {
                             <TableHeading sortable = {false}>
                                 Image
                             </TableHeading>
+                            {!projectId && (
+                                <TableHeading sortable = {false}>
+                                    Project Name
+                                </TableHeading>
+                            )}
                             <TableHeading
                                 name="name"
                                 sort_field={queryParms.sort_field}
@@ -137,6 +143,7 @@ export default function TasksTable({tasks, queryParms, projectId = null}) {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     <img className="h-10 w-10 rounded-sm" src={task.image_path} alt={task.name} />
                                 </td>
+                                {!projectId && (<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{task.project.name}</td>)}
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{task.name}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     <span className={`px-2 py-1 rounded text-white ${PROJECT_STATUS_CLASS_MAP[task.status]}`}>
