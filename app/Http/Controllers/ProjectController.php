@@ -8,6 +8,7 @@ use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Project;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -54,7 +55,6 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-
         $data = $request->validated();
 
         $data['created_by'] = auth()->id();
@@ -105,7 +105,9 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        //
+        return inertia('Project/Edit', [
+            'project' => new ProjectResource($project),
+        ]);
     }
 
     /**
@@ -113,7 +115,22 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        //
+        $data = $request->validated();
+
+        $data['updated_by'] = auth()->id();
+
+        if($request->hasFile('image')) {
+            # delete old image
+            if($project->image_path && Storage::disk('public')->exists($project->image_path)) {
+                Storage::disk('public')->deleteDirectory(dirname($project->image_path));
+            }
+
+            $data['image_path'] = $request->file('image')->store('projects/'. Str::random(8), 'public');
+        }
+
+        $project->update($data);
+
+        return to_route('project.index')->with('success', 'Project updated successfully.');
     }
 
     /**
@@ -121,6 +138,15 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+        $message = "Project \"{$project->name}\" deleted successfully.";
+
+        # delete old image
+        if($project->image_path && Storage::disk('public')->exists($project->image_path)) {
+            Storage::disk('public')->deleteDirectory(dirname($project->image_path));
+        }
+
+        $project->delete();
+
+        return to_route('project.index')->with('success', $message);
     }
 }

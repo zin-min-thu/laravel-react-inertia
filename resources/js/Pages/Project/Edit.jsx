@@ -6,32 +6,33 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 
-export default function Create() {
+export default function Create({project}) {
 
     const{data, setData, post, errors, reset} = useForm({
-        name: '',
-        description: '',
-        due_date: '',
-        status: '',
         image: null,
+        name: project.name || '',
+        description: project.description || '',
+        due_date: project.due_date || '',
+        status: project.status || '',
+        _method: 'PUT',
     })
 
     const onSubmit = (e) => {
         e.preventDefault();
-
-        post(route('project.store'));
+        post(route('project.update', project.id), {
+            forceFormData: true
+        });
     }
 
     return (
         <AuthenticatedLayout 
             header={
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        Create Project
+                        Edit Project {project.name}
                     </h2>
                 }
         >
-        <Head title="Create Project" />
-        
+        <Head title="Edit Project" />
         <div className="py-12">
             <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 mt-4">
                 <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
@@ -42,6 +43,17 @@ export default function Create() {
                             encType="multipart/form-data"
                             className="mt-4 space-y-6"
                         >
+                            {project.image_path && (
+                                <div className="mb-4 flex justify-start">
+                                    <img
+                                        src={project.image_path}
+                                        alt={project.name}
+                                        className="w-48 h-auto rounded border"
+                                        style={{ objectFit: 'contain' }}
+                                    />
+                                </div>
+                            )}
+
                             <div>
                                 <InputLabel htmlFor="project_image_path" value="Project Image" />
                                 <TextInput 
