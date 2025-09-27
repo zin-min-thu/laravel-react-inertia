@@ -25,10 +25,14 @@ class ProjectResource extends JsonResource
             'created_at' => (new Carbon($this->created_at))->format('Y-m-d'),
             'due_date' => (new Carbon($this->due_date))->format('Y-m-d'),
             'status' => $this->status,
-            'image_path' => $this->image_path,
+            'image_path' => $this->image_path ? ( $this->isExternalLink($this->image_path) ? $this->image_path : asset('storage/' . $this->image_path) ) : null ,
             'createdBy' => new UserResource($this->createdBy),
             'updatedBy' => new UserResource($this->updatedBy),
         ];
+    }
 
+    protected function isExternalLink($url)
+    {
+        return preg_match('/^(http|https):\/\//', $url);
     }
 }

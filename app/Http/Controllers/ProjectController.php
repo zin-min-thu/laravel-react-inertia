@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Project;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -36,6 +37,7 @@ class ProjectController extends Controller
         return inertia('Project/Index', [
             'projects' => ProjectResource::collection($projects),
             'queryParms' => request()->query() ?: null,
+            'success' => session('success'),
         ]);
     }
 
@@ -52,7 +54,20 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        //
+
+        $data = $request->validated();
+
+        $data['created_by'] = auth()->id();
+        $data['updated_by'] = auth()->id();
+
+        if($request->hasFile('image')) {
+            $data['image_path'] = $request->file('image')->store('projects/'. Str::random(8), 'public');
+        }
+
+        // dd($request->all());
+        Project::create($data);
+
+        return to_route('project.index')->with('success', 'Project created successfully.');
     }
 
     /**

@@ -7,7 +7,7 @@ import { Head, Link, router } from '@inertiajs/react';
 
 import TableHeading from '@/Components/TableHeading';
 
-export default function Index({ auth , projects, queryParms = null }) {
+export default function Index({ auth , projects, queryParms = null, success = null}) {
 
     if(!queryParms) {
         queryParms = {};
@@ -63,7 +63,11 @@ export default function Index({ auth , projects, queryParms = null }) {
             <Head title="Project" />
 
             <div className="py-12">
+
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+
+                    {success && (<div className="bg-emerald-500 py-2 px-4 text-white rounded mb-4">{success}</div> )}
+
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             
