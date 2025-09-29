@@ -3,7 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import TasksTable from '../Task/TasksTable';
 
-export default function Show({ auth, project, tasks, queryParms = null  }) {
+export default function Show({ auth, project, tasks, queryParms = null, success = null}) {
     return (
         <AuthenticatedLayout
                     header={
@@ -71,6 +71,7 @@ export default function Show({ auth, project, tasks, queryParms = null  }) {
                                 tasks={tasks}
                                 queryParms={queryParms}
                                 projectId={project.id}
+                                success={success}
                             />
                         </div>
                     </div>

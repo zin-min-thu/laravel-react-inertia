@@ -3,8 +3,8 @@ import SelectInput from '@/Components/SelectInput';
 import TextInput from '@/Components/TextInput';
 import TableHeading from '@/Components/TableHeading';
 import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from '@/constants.jsx';
-import { router } from '@inertiajs/react';
-export default function TasksTable({tasks, queryParms, projectId = null}) {
+import { Link, router } from '@inertiajs/react';
+export default function TasksTable({tasks, queryParms, projectId = null, success}) {
 
     queryParms = queryParms || {};
 
@@ -46,9 +46,17 @@ export default function TasksTable({tasks, queryParms, projectId = null}) {
         }
     }
 
+    const deleteTask = (ev, task) => {
+        if(!confirm("Are you sure?")) {
+            ev.preventDefault();
+        }
+
+        router.delete(route('task.destroy', task.id));
+    }
 
     return (
         <>
+            {success && (<div className="bg-emerald-500 py-2 px-4 text-white rounded mb-4">{success}</div> )}
             {/* Table Responsive wrapper */}
             <div className="overflow-x-auto">
                 <table className="min-w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -144,7 +152,11 @@ export default function TasksTable({tasks, queryParms, projectId = null}) {
                                     <img className="h-10 w-10 rounded-sm" src={task.image_path} alt={task.name} />
                                 </td>
                                 {!projectId && (<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{task.project.name}</td>)}
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{task.name}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <Link href={route('task.show', task.id)} className="text-indigo-600 hover:text-indigo-900">
+                                        {task.name}
+                                    </Link>
+                                </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     <span className={`px-2 py-1 rounded text-white ${PROJECT_STATUS_CLASS_MAP[task.status]}`}>
                                         {PROJECT_STATUS_TEXT_MAP[task.status]}
@@ -154,8 +166,8 @@ export default function TasksTable({tasks, queryParms, projectId = null}) {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{task.due_date}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{task.createdBy.name}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 flex space-x-2">
-                                    <a href={route('task.edit', task.id)} className="text-indigo-600 hover:text-indigo-900">View</a>
-                                    <a href={route('task.destroy', task.id)} className="text-red-600 hover:text-red-800">Edit</a>
+                                    <a href={route('task.edit', task.id)} className="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                    <button onClick={ev => deleteTask(ev, task)} className="text-red-600 hover:text-red-800">Delete</button>
                                 </td>
                             </tr>
                         ))}
