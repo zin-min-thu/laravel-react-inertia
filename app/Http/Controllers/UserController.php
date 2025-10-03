@@ -5,33 +5,25 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserCrudResource;
+use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
+use Illuminate\Http\Request;
+
 class UserController extends Controller
 {
-    public function index()
+    public function __construct(private UserRepositoryInterface $userRepository)
     {
-        $query = User::query();
+        
+    }
 
-        $sortField      = request('sort_field', 'created_at');
-        $sortDirection  = request('sort_direction', 'desc');
-
-        $query = $query->where(function ($query) {
-            if(request('name')) {
-                $query->where('name', 'like', '%' . request('name') . '%');
-            }
-
-            if(request('email')) {
-                $query->where('email', 'like', '%' . request('email') . '%');
-            }
-        });
-
-        $users = $query->orderBy($sortField, $sortDirection)
-                ->paginate(10)->onEachSide(1);
+    public function index(Request $request)
+    {
+        $users = $this->userRepository->getAll(null, $request, 10);
 
         return inertia('User/Index', [
-            'users' => UserCrudResource::collection($users),
-            'queryParms' => request()->query() ?: null,
-            'success' => session('success'),
+            'users'         => UserCrudResource::collection($users),
+            'queryParms'    => request()->query() ?: null,
+            'success'       => session('success'),
         ]);
     }
 
@@ -50,12 +42,7 @@ class UserController extends Controller
     {
         $data = $request->validated();
 
-        $data['password'] = bcrypt($data['password']);
-
-        $data['created_by'] = auth()->id();
-        $data['updated_by'] = auth()->id();
-
-        User::create($data);
+        $this->userRepository->create($data);
 
         return to_route('user.index')->with('success', 'User created successfully.');
     }
@@ -88,15 +75,7 @@ class UserController extends Controller
     {
         $data = $request->validated();
 
-        if(!empty($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
-        } else {
-            unset($data['password']);
-        }
-
-        $data['updated_by'] = auth()->id();
-
-        $user->update($data);
+        $this->userRepository->update($user, $data);
 
         return to_route('user.index')->with('success', 'User updated successfully.');
     }
@@ -108,7 +87,7 @@ class UserController extends Controller
     {
         $message = "User \"{$user->name}\" deleted successfully.";
 
-        $user->delete();
+        $this->userRepository->delete($user);
 
         return to_route('user.index')->with('success', $message);
     }

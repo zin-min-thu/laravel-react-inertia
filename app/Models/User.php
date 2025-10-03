@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Builders\UserBuilder;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -50,4 +51,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Task::class, 'assigned_user_id');
     }
+
+    public function newEloquentBuilder($query)
+    {
+        return new UserBuilder($query);
+    }
+
 }

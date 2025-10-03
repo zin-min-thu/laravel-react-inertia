@@ -26,10 +26,6 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
-        // dd($activeTasks);
-
-        // dd($statusCounts, $myStatusCounts);
-
         return inertia('Dashboard', [
             'statusCounts'      => $statusCounts,
             'myStatusCounts'    => $myStatusCounts,

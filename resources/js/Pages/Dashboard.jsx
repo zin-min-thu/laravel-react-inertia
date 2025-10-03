@@ -12,8 +12,6 @@ export default function Dashboard({ statusCounts, myStatusCounts, activeTasks })
             }
         >
             <Head title="Dashboard" />
-            {/* <pre>{JSON.stringify(myStatusCounts, null, 2)}</pre>
-            <pre>{JSON.stringify(statusCounts, null, 2)} </pre> */}
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 grid grid-cols-3 gap-2">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
